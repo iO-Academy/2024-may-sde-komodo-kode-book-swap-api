@@ -12,6 +12,10 @@ class BookController extends Controller
     {
         $books = Book::all();
 
-        return response()->json(['message' => 'Books retrieved', 'status' => 'success', 'data' => $books]);
+        return response()->json([
+            'message' => 'Books retrieved',
+            'status' => 'success',
+            'data' => $books
+        ]);
     }
 }
