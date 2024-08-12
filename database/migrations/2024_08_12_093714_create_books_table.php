@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('author');
-            $table->string('blurb');
+            $table->string('blurb')->nullable();
             $table->string('claimed_by_name')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->integer('page_count');
+            $table->integer('year')->nullable();
             $table->foreignId('genre_id');
             $table->foreignId('reviews_id');
             $table->timestamps();
