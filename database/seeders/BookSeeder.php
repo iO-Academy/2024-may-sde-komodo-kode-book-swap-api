@@ -24,7 +24,7 @@ class BookSeeder extends Seeder
                 'image'=>$faker->imageUrl(),
                 'page_count'=>rand(100,500),
                 'genre_id'=>rand(1,10),
-                'reviews_id'=>1,
+                'reviews_id'=>$faker->unique()->numberBetween(1,10),
             ]);
         }
     }
