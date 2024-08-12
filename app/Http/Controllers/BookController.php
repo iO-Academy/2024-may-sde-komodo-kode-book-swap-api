@@ -10,12 +10,13 @@ class BookController extends Controller
 {
     public function getAllBooks()
     {
-        $books = Book::all();
+        $books = Book::with('genre:id,name')
+            ->get()
+            ->makeHidden(['created_at', 'updated_at', 'blurb', 'claimed_by_name', 'page_count', 'year', 'genre_id', 'reviews_id']);
 
         return response()->json([
-            'message' => 'Books retrieved',
-            'status' => 'success',
-            'data' => $books
+            'data' => $books,
+            'message' => 'Books successfully retrieved',
         ]);
     }
 }
