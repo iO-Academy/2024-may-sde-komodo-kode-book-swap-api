@@ -1,549 +1,66 @@
-# 2024-may-sde-komodo-kode-book-swap-api
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-## API documentation
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-### Return all books - optionally filtered
+## About Laravel
 
-* **URL**
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-  /api/books
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-* **Method:**
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-  `GET`
+## Learning Laravel
 
-* **URL Params**
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-  **Required:**
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-  There are no required URL params
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-  **Optional:**
+## Laravel Sponsors
 
-  - `claimed=0|1` - Either 1 or 0 to get only claimed/unclaimed books
-  - `search=string` - A search term
-  - `genre=int` - Filter results by genre id
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-  **Example:**
+### Premium Partners
 
-  `/api/books?search=Peach&claimed=1&genre=1`
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[WebReinvent](https://webreinvent.com/)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Jump24](https://jump24.co.uk)**
+- **[Redberry](https://redberry.international/laravel/)**
+- **[Active Logic](https://activelogic.com)**
+- **[byte5](https://byte5.de)**
+- **[OP.GG](https://op.gg)**
 
-* **Success Response:**
+## Contributing
 
-    * **Code:** 200 <br />
-      **Content:** <br />
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-```json
-{
-    "data": [
-        {
-            "id": 2,
-            "title": "foo",
-            "author": "Test",
-            "image": "https://via.placeholder.com/640x480.png/00cc88?text=iure",
-            "genre": {
-                "id": 1,
-                "name": "Action"
-            }
-        }
-    ],
-    "message": "Books successfully retrieved"
-}
-```
+## Code of Conduct
 
-* **Error Response:**
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-    * **Code:** 422 UNPROCESSABLE CONTENT <br />
-      **Content:**
-        ```json
-        {
-            "message": "The claimed field must be a number. (and 2 more errors)",
-            "errors": {
-                "claimed": [
-                    "The claimed field must be a number."
-                ],
-                "genre": [
-                    "The selected genre is invalid."
-                ],
-                "search": [
-                    "The search field must be a string."
-                ]
-            }
-        }
-        ```
+## Security Vulnerabilities
 
-### Return a specific book
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-* **URL**
+## License
 
-  /api/books/{id}
-
-* **Method:**
-
-  `GET`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-  **Example:**
-
-  `/api/books/1`
-
-* **Success Response:**
-
-    * **Code:** 200 <br />
-      **Content:** <br />
-
-```json
-{
-    "data": {
-        "id": 1,
-        "title": "Test",
-        "author": "Test person",
-        "blurb": "blurb",
-        "claimed_by_name": "Ash",
-        "image": "https://example.com/image.jpg",
-        "page_count": 1000,
-        "year": 1980,
-        "genre": {
-            "id": 1,
-            "name": "Action"
-        },
-        "reviews": [
-            {
-                "id": 3,
-                "name": "Ash",
-                "rating": 1,
-                "review": "bad"
-            }
-        ]
-    },
-    "message": "Book successfully found"
-}
-```
-
-* **Error Response:**
-
-    * **Code:** 404 NOT FOUND <br />
-      **Content:** `{"message": "Book with id 999 not found"}`
-
-### Claim book
-
-* **URL**
-
-  /books/claim/{id}
-
-* **Method:**
-
-  `PUT`
-
-* **Body Data**
-
-  Must be sent as JSON with the correct headers
-
-  **Required:**
-
-    ```json
-    {
-      "email": "String",
-      "name": "string"
-    }
-    ```
-
-  **Optional:**
-
-    There are no optional body parameters
-
-  **Example:**
-
-  `/api/books/claim/1`
-
-* **Success Response:**
-
-    * **Code:** 200 OK <br />
-      **Content:** <br />
-
-  ```json
-  {"message": "Book 1 was claimed"}
-  ```
-
-* **Error Response:**
-
-    * **Code:** 404 NOT FOUND <br />
-      **Content:** `{"message": "Book 10 was not found"}`
-  
-    * **Code:** 400 BAD REQUEST <br />
-        **Content:** `{"message": "Book 10 is already claimed"}`
-
-    * **Code:** 422 UNPROCESSABLE CONTENT <br />
-      **Content:** 
-    ```json
-    {
-        "message": "The email field is required. (and 1 more error)",
-        "errors": {
-            "email": [
-                "The email field is required."
-            ],
-            "name": [
-                "The name field is required."
-            ]
-        }
-    }
-    ```
-
-
-### Return book
-
-* **URL**
-
-  /books/return/{id}
-
-* **Method:**
-
-  `PUT`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-* **Body Data**
-
-  Must be sent as JSON with the correct headers
-
-  **Required:**
-
-    ```json
-    {
-      "email": "String",
-    }
-    ```
-
-  **Optional:**
-
-  There are no optional body parameters
-
-  **Example:**
-
-  `/api/books/return/1`
-
-* **Success Response:**
-
-    * **Code:** 200 OK <br />
-      **Content:** <br />
-
-  ```json
-  {"message": "Book 1 was returned"}
-  ```
-
-* **Error Response:**
-
-    * **Code:** 404 NOT FOUND <br />
-      **Content:** `{"message": "Book 10 was not found"}`
-  
-    * **Code:** 400 BAD REQUEST <br />
-      **Content:** `{"message": "Book 10 is not currently claimed"}`
-
-    * **Code:** 400 BAD REQUEST <br />
-      **Content:** `{"message": "Book 1 was not returned. test@test.com did not claim this book."}`
-  
-    * **Code:** 422 UNPROCESSABLE CONTENT <br />
-      **Content:**
-    ```json
-    {
-        "message": "The email field is required.",
-        "errors": {
-            "email": [
-                "The email field is required."
-            ]
-        }
-    }
-    ```
-    * **Code:** 500 INTERNAL SERVER ERROR <br />
-      **Content:** `{"message": "Book 10 was not able to be returned"}`
-
-### Add a new book
-
-* **URL**
-
-  /api/books
-
-* **Method:**
-
-  `POST`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-* **Body Data**
-
-  Must be sent as JSON with the correct headers
-
-  **Required:**
-
-    ```json
-    {
-      "title": "String",
-      "author": "string",
-      "genre_id": integer
-    }
-    ```
-
-  **Optional:**
-
-    ```json
-    {
-      "blurb": "string",
-      "image": "url",
-      "year": 1234
-    }
-    ```
-
-  **Example:**
-
-  `/api/books`
-
-* **Success Response:**
-
-    * **Code:** 201 CREATED <br />
-      **Content:** <br />
-
-  ```json
-  {"message": "Book created"}
-  ```
-
-  * **Error Response:**
-
-      * **Code:** 500 INTERNAL SERVER ERROR <br />
-        **Content:** `{"message": "Unexpected error occurred"}`
-
-      * **Code:** 422 UNPROCESSABLE CONTENT <br />
-        **Content:**
-      ```json
-      {
-          "message": "The title field is required. (and 2 more errors)",
-          "errors": {
-              "title": [
-                "The title field is required."
-              ],
-              "author": [
-                "The author field is required."
-              ],
-              "genre_id": [
-                "The genre id field is required."
-              ]
-          }
-      }
-      ```
-
-### Delete a book
-
-* **URL**
-
-  /api/books/{id}
-
-* **Method:**
-
-  `DELETE`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-* **Body Data**
-
-  Must be sent as JSON with the correct headers
-
-  **Required:**
-
-    There are no required body parameters
-
-  **Optional:**
-
-  There are no required body parameters
-
-  **Example:**
-
-  `/api/books/1`
-
-* **Success Response:**
-
-    * **Code:** 200 OK <br />
-      **Content:** <br />
-
-  ```json
-  {"message": "Book 1 was deleted"}
-  ```
-
-    * **Error Response:**
-
-        * **Code:** 404 NOT FOUND <br />
-          **Content:** `{"message": "The title field is required. (and 2 more errors)"}`
-
-
-### Add a new book review
-
-* **URL**
-
-  /api/reviews
-
-* **Method:**
-
-  `POST`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-* **Body Data**
-
-  Must be sent as JSON with the correct headers
-
-  **Required:**
-
-    ```json
-    {
-      "name": "String",
-      "rating": integer,
-      "review": "string",
-      "book_id": "int"
-    }
-    ```
-    Note: rating must be an integer between 0 and 5
-* 
-  **Optional:**
-
-    There are no optional body parameters
-
-  **Example:**
-
-  `/api/reviews`
-
-* **Success Response:**
-
-    * **Code:** 201 CREATED <br />
-      **Content:** <br />
-
-  ```json
-  {"message": "Review created"}
-  ```
-
-* **Error Response:**
-
-    * **Code:** 500 INTERNAL SERVER ERROR <br />
-      **Content:** `{"message": "Unexpected error occurred"}`
-
-    * **Code:** 422 UNPROCESSABLE CONTENT <br />
-      **Content:**
-    ```json
-      {      
-          "message": "The name field is required. (and 3 more errors)",
-          "errors": {
-              "name": [
-                "The name field is required."
-              ],
-              "rating": [
-                "The rating field is required."
-              ],
-              "review": [
-                "The review field is required."
-              ],
-              "book_id": [
-                "The book id field is required."
-              ]
-          }
-      }
-    ```
-
-### Return all genres
-
-* **URL**
-
-  /api/genres
-
-* **Method:**
-
-  `GET`
-
-* **URL Params**
-
-  **Required:**
-
-  There are no required URL params
-
-  **Optional:**
-
-  There are no optional URL params
-
-  **Example:**
-
-  `/api/genres`
-
-* **Success Response:**
-
-    * **Code:** 200 <br />
-      **Content:** <br />
-
-```json
-{
-    "data": [
-        {
-            "id": 1,
-            "name": "Action"
-        }
-    ],
-    "message": "Genres retrieved"
-}
-```
-
-* **Error Response:**
-
-    * **Code:** 500 INTERNAL SERVER ERROR <br />
-      **Content:** `{"message": "Unexpected error occurred"}`
-
-## Example fetch request
-
-```js
-fetch('https://book-swap-api.dev.io-academy.uk/api/books', {
-    mode: 'cors',
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-}).then(res => res.json())
-    .then(data => {
-        console.log(data)
-    })
-
-```
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
