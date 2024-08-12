@@ -17,11 +17,11 @@ class BookController extends Controller
        $book=$this->book->with('genre')->with('reviews')->find($id);
        if (!$book){
            return response()->json([
-               'message'=>'book not found',
-               'success'=>false], 400);
+               'message'=>"Book with id {$id} not found",
+               'success'=>false], 404);
        }
        return response()->json([
-           'message'=>'book found',
+           'message'=>'Book successfully found',
            'success'=>true,
            'data'=>$book
        ]);
