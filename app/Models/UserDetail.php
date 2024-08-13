@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserDetail extends Model
 {
+    public $hidden=['created_at', 'updated_at'];
     use HasFactory;
 }
