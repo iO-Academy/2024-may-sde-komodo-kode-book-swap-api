@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('author');
             $table->string('blurb')->nullable();
             $table->string('claimed_by_name')->nullable();
+            $table->string('email')->nullable();
             $table->string('image')->nullable();
             $table->integer('page_count');
             $table->integer('year')->nullable();
