@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
+    public $hidden=['created_at', 'updated_at','genre_id','reviews_id'];
     use HasFactory;
 
     public function reviews(): HasMany
