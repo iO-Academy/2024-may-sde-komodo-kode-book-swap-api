@@ -80,6 +80,13 @@ class BookTest extends TestCase
         ;
     }
 
+    public function test_getBooksByClaimed_validation():void
+    {
+        $data = "Will man";
+        $response = $this->get("/api/books?claimed={$data}");
+        $response->assertInvalid(['claimed']);
+    }
+
     public function test_claimBook_success(): void
     {
         $data = [
@@ -121,4 +128,5 @@ class BookTest extends TestCase
 
         $response->assertInvalid(['claimed_by_name', 'email'])->assertStatus(422);
     }
+
 }
