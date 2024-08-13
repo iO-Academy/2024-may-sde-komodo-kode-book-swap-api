@@ -36,6 +36,11 @@ class BookController extends Controller
         if ($request->genre) {
             $books->where('genre_id', '=', $request->genre);
         }
+        if ($request->genre > 10) {
+            return response()->json([
+                'message' => 'The selected genre is invalid.',
+            ], 422);
+        }
 
         $books = $books
             ->get()
