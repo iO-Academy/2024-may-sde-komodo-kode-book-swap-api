@@ -79,4 +79,46 @@ class BookTest extends TestCase
             })
         ;
     }
+
+    public function test_claimBook_success(): void
+    {
+        $data = [
+            "claimed_by_name" => "milan",
+            "email" => "milan@hotmail.com"
+        ];
+
+        Book::factory()->create();
+
+        $response = $this->putJson('/api/books/1', $data);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('books', $data);
+    }
+
+    public function test_claimBook_alreadyClaimed(): void
+    {
+        $data = [
+            "claimed_by_name" => "milan",
+            "email" => "milan@hotmail.com"
+        ];
+
+        Book::factory()->create(['claimed_by_name' => 'george', 'email' => "george@hotmail.com"]);
+
+        $response = $this->putJson('/api/books/1', $data);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_claimBook_validation(): void
+    {
+        $data = [
+            "claimed_by_name" => null,
+            "email" => "milom"
+        ];
+
+        $response = $this->putJson('/api/books/1', $data);
+
+        $response->assertInvalid(['claimed_by_name', 'email'])->assertStatus(422);
+    }
 }

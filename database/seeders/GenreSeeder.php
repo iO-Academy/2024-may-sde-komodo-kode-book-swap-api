@@ -16,7 +16,7 @@ class GenreSeeder extends Seeder
         $faker = \Faker\Factory::create();
         for($i=0; $i<10; $i++){
             DB::table('genres')->insert([
-                'name'=>$faker->word(),
+                'name' => $faker->word(),
             ]);}
     }
 }

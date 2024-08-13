@@ -16,10 +16,10 @@ class ReviewSeeder extends Seeder
         $faker = \Faker\Factory::create();
         for($i=0; $i<10; $i++){
             DB::table('reviews')->insert([
-                'name'=>$faker->name(),
-                'review'=>$faker->paragraph(3),
-                'rating'=>$faker->numberBetween(1, 5),
-                'book_id'=>$faker->unique()->numberBetween(1,10),
+                'name' => $faker->name(),
+                'review' => $faker->paragraph(3),
+                'rating' => $faker->numberBetween(1, 5),
+                'book_id' => $faker->unique()->numberBetween(1,10),
             ]);}
     }
 }
