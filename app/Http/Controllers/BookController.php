@@ -111,7 +111,7 @@ class BookController extends Controller
         {
             return response()->json([
                 'message' => "Book {$id} was not returned. {$request->email} did not claim this book."
-            ]);
+            ], 400);
         }
 
         $book->claimed_by_name = null;
