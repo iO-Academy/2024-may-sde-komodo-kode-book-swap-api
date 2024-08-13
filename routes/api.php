@@ -9,3 +9,7 @@ Route::get('/user', function (Request $request) {
 Route::get('/books/{id}', [\App\Http\Controllers\BookController::class, 'getSingleBook']);
 
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
+
+Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
+
+
