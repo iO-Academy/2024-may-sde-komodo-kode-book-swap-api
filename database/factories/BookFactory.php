@@ -20,14 +20,14 @@ class BookFactory extends Factory
     {
         return [
             'title' => $this->faker->words(rand(1,5),true),
-            'author'=>$this->faker->word(),
-            'blurb'=>$this->faker->paragraph(3),
-            'claimed_by_name'=>null,
-            'image'=>$this->faker->imageUrl(),
-            'page_count'=>rand(100,500),
-            'genre_id'=>Genre::factory(),
-            'reviews_id'=>Review::factory(),
-            'year'=>$this->faker->year(),
+            'author' => $this->faker->word(),
+            'blurb' => $this->faker->paragraph(3),
+            'claimed_by_name' => null,
+            'image' => $this->faker->imageUrl(),
+            'page_count' => rand(100,500),
+            'genre_id' => Genre::factory(),
+            'reviews_id' => Review::factory(),
+            'year' => $this->faker->year(),
         ];
     }
 }

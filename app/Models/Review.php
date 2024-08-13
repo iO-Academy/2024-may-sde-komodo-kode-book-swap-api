@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Review extends Model
 {
     use HasFactory;
+
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);

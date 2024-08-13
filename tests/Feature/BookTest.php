@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -31,7 +32,7 @@ class BookTest extends TestCase
                             'author',
                             'image',
                             'genre'
-                        ]);
+                        ])->has('genre', 2);
                 });
             })
         ;

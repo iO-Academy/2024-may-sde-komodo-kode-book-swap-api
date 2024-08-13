@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Genre extends Model
 {
     use HasFactory;
+
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
