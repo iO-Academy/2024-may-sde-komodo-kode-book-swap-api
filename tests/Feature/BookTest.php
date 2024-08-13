@@ -14,6 +14,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 class BookTest extends TestCase
 {
     use DatabaseMigrations;
+
     public function test_getSingleBook_success(): void
     {
         Book::factory()->count(10)->create();
@@ -22,27 +23,27 @@ class BookTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
                 $json->hasAll(['message', 'data'])
-                ->has('data',function (AssertableJson $json){
-                    $json->hasAll([
-                        'id',
-                        'title',
-                        'author',
-                        'blurb',
-                        'claimed_by_name',
-                        'image',
-                        'page_count',
-                        'year',
-                        'genre',
-                        'reviews'
-                    ])
-                    ->has('genre',function (AssertableJson $json){
-                        $json->hasAll(['id','name']);
-                    })
-                    ->has('reviews',1,function (AssertableJson $json){
-                        $json->hasAll(['id','name','review','rating']);
-                    });
+                    ->has('data', function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'blurb',
+                            'claimed_by_name',
+                            'image',
+                            'page_count',
+                            'year',
+                            'genre',
+                            'reviews'
+                        ])
+                            ->has('genre', function (AssertableJson $json) {
+                                $json->hasAll(['id', 'name']);
+                            })
+                            ->has('reviews', 1, function (AssertableJson $json) {
+                                $json->hasAll(['id', 'name', 'review', 'rating']);
+                            });
 
-                });
+                    });
             });
 
     }
@@ -56,6 +57,7 @@ class BookTest extends TestCase
                 $json->hasAll(['message']);
             });
     }
+
     public function test_getAllBooks_success(): void
     {
         Book::factory()->count(10)->create();
@@ -75,9 +77,41 @@ class BookTest extends TestCase
                         ])->has('genre', function (AssertableJson $json) {
                             $json->hasAll(['id', 'name']);
                         });
-                });
-            })
-        ;
+                    });
+            });
+    }
+
+    public function test_getAllBooks_genre(): void
+    {
+        Book::factory()->count(1)->create();
+
+        $response = $this->get('/api/books?genre=1');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 1, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                    });
+            });
+    }
+
+    public function test_getAllBooks_genre_error(): void
+    {
+        Book::factory()->count(10)->create();
+
+        $response = $this->get('/api/books?genre=77');
+
+        $response->assertStatus(302)
+            ->assertInvalid(['genre']);
     }
 
     public function test_getBooksByClaimed_validation():void

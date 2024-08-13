@@ -18,7 +18,7 @@ class BookController extends Controller
     public function getSingleBook(int $id)
     {
        $book=$this->book->with('genre')->with('reviews')->find($id);
-       if (!$book){
+       if (!$book) {
            return response()->json([
                'message' => "Book with id {$id} not found"
            ], 404);
@@ -32,10 +32,15 @@ class BookController extends Controller
     public function getAllBooks(Request $request)
     {
         $request->validate([
-            'claimed' => 'boolean'
+            'claimed' => 'boolean',
+            'genre' => 'int|exists:genres,id'
         ]);
 
         $books = $this->book->with('genre:id,name');
+
+        if ($request->genre) {
+            $books->where('genre_id', '=', $request->genre);
+        }
 
         if($request->claimed == 1){
             $books = $books->where('claimed_by_name','!=',null);
