@@ -32,7 +32,9 @@ class BookTest extends TestCase
                             'author',
                             'image',
                             'genre'
-                        ])->has('genre', 2);
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
                 });
             })
         ;
