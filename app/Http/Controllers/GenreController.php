@@ -11,6 +11,16 @@ class GenreController extends Controller
     {
         $genres = Genre::all()->makeHidden(['created_at', 'updated_at']);
 
-        return response()->json(['data' => $genres, 'message' => 'Genres retrieved']);
+        if (!$genres) {
+            return response()->json([
+                'message' => 'Unexpected error occurred'
+            ], 500);
+        }
+
+        return response()->json([
+            'data' => $genres,
+            'message' => 'Genres retrieved'
+        ], 200);
+
     }
 }
