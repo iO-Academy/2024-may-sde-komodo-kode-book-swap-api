@@ -103,4 +103,17 @@ class BookTest extends TestCase
             })
         ;
     }
+
+    public function test_getAllBooks_genre_error(): void
+    {
+        Book::factory()->count(10)->create();
+
+        $response = $this->get('/api/books?genre=70');
+
+        $response->assertStatus(422)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['message']);
+            })
+        ;
+    }
 }
