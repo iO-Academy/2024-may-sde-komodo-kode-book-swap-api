@@ -103,10 +103,22 @@ class BookTest extends TestCase
             "email" => "milan@hotmail.com"
         ];
 
-        Book::factory()->create();
+        Book::factory()->create(['claimed_by_name' => 'george', 'email' => "george@hotmail.com"]);
 
         $response = $this->putJson('/api/books/1', $data);
 
         $response->assertStatus(400);
+    }
+
+    public function test_claimBook_validation(): void
+    {
+        $data = [
+            "claimed_by_name" => null,
+            "email" => "milom"
+        ];
+
+        $response = $this->putJson('/api/books/1', $data);
+
+        $response->assertInvalid(['claimed_by_name', 'email'])->assertStatus(422);
     }
 }
