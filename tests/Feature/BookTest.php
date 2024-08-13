@@ -2,18 +2,20 @@
 
 namespace Tests\Feature;
 
+// use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\TestCase;
 
 class BookTest extends TestCase
 {
     use DatabaseMigrations;
+
     /**
-     * A basic feature test example.
      */
     public function test_getSingleBook_success(): void
     {
@@ -27,7 +29,8 @@ class BookTest extends TestCase
             });
 
     }
-        public function test_getSingleBook_fail(): void
+
+    public function test_getSingleBook_fail(): void
     {
         Book::factory()->create();
         $response = $this->get("/api/books/3421789321709831");
@@ -36,6 +39,28 @@ class BookTest extends TestCase
             ->assertJson(function (AssertableJson $json) {
                 $json->hasAll(['message', 'success']);
             });
+    }
+    public function test_getAllBooks_success(): void
+    {
+        Book::factory()->count(10)->create();
 
+        $response = $this->get('/api/books');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 10, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                });
+            })
+        ;
     }
 }

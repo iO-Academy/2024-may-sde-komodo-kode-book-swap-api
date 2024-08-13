@@ -11,10 +11,12 @@ class Book extends Model
 {
     public $hidden=['created_at', 'updated_at'];
     use HasFactory;
+
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
+
     public function genre(): BelongsTo
     {
         return $this->belongsTo(Genre::class);
