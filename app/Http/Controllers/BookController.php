@@ -29,15 +29,25 @@ class BookController extends Controller
        ]);
     }
 
-    public function getAllBooks()
+    public function getAllBooks($genre)
     {
         $books = $this->book->with('genre:id,name')
             ->get()
             ->makeHidden(['created_at', 'updated_at', 'blurb', 'claimed_by_name', 'page_count', 'year', 'genre_id', 'reviews_id']);
 
+        if ($genre) {
+
+            $books = Book::where('genre_id', '==', $genre);
+            return response()->json([
+                'data'=>$books,
+                'message' => 'Books successfully retrieved',
+            ], 200);
+        }
+
         return response()->json([
             'data' => $books,
             'message' => 'Books successfully retrieved',
         ]);
+
     }
 }

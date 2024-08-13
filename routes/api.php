@@ -12,4 +12,6 @@ Route::get('/books', [\App\Http\Controllers\BookController::class, 'getAllBooks'
 
 Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
 
+Route::get('/books/{genre}', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
+
 
