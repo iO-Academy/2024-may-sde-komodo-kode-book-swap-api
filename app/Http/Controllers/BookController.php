@@ -44,7 +44,7 @@ class BookController extends Controller
 
         $books = $books
             ->get()
-            ->makeHidden(['created_at', 'updated_at']);
+            ->makeHidden(['created_at', 'updated_at', 'blurb', 'claimed_by_name', 'page_count', 'year', 'genre_id', 'reviews_id']);
 
         return response()->json([
             'data' => $books,
