@@ -18,14 +18,15 @@ class BookSeeder extends Seeder
         for($i=0; $i<10; $i++){
             DB::table('books')->insert([
                 'title' => $faker->words(rand(1,5),true),
-                'author'=>$faker->word(),
-                'blurb'=>$faker->paragraph(3),
-                'claimed_by_name'=>null,
-                'image'=>$faker->imageUrl(),
-                'page_count'=>rand(100,500),
-                'genre_id'=>rand(1,10),
-                'reviews_id'=>$faker->unique()->numberBetween(1,10),
-                'year'=>$faker->year(),
+                'author' => $faker->word(),
+                'blurb' => $faker->paragraph(3),
+                'claimed_by_name' => null,
+                'email' => null,
+                'image' => $faker->imageUrl(),
+                'page_count' => rand(100,500),
+                'genre_id' => rand(1,10),
+                'reviews_id' => $faker->unique()->numberBetween(1,10),
+                'year' => $faker->year(),
             ]);
         }
     }
