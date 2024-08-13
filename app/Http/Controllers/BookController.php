@@ -31,15 +31,14 @@ class BookController extends Controller
 
     public function getAllBooks(Request $request)
     {
+        $request->validate([
+            'genre' => 'int|exists:genres,id',
+        ]);
+
         $books = $this->book->with('genre:id,name');
 
         if ($request->genre) {
             $books->where('genre_id', '=', $request->genre);
-        }
-        if ($request->genre > 10) {
-            return response()->json([
-                'message' => 'The selected genre is invalid.',
-            ], 422);
         }
 
         $books = $books
