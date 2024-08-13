@@ -112,6 +112,12 @@ class BookTest extends TestCase
                     });
             })
         ;
+    }
+
+    public function test_getBooksByUnclaimed_success()
+    {
+        Book::factory()->count(3)->create();
+        Book::factory()->count(7)->create(['claimed_by_name' => 'george', 'email' => "george@hotmail.com"]);
 
         $data = 0;
 
