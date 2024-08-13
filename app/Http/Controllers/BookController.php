@@ -89,4 +89,26 @@ class BookController extends Controller
             'message' => 'Something went wrong'
         ], 500);
     }
+
+    public function addBook(Request $request)
+    {
+//        $request->validate([
+//
+//        ]);
+
+        $book = new Book();
+
+        $book->title = $request->title;
+        $book->author = $request->author;
+        $book->genre_id = $request->genre_id;
+        $book->blurb = $request->blurb ?? $request->blurb;
+        $book->image = $request->image ?? $request->image;
+        $book->year = $request->year ?? $request->year;
+
+        if ($book->save()) {
+            return response()->json([
+               'message' => 'Book created',
+            ], 201);
+        }
+    }
 }
