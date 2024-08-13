@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     private Book $book;
+
     public function __construct(Book $book)
     {
         $this->book=$book;
     }
+
     public function getSingleBook(int $id)
     {
        $book=$this->book->with('genre')->with('reviews')->find($id);
@@ -26,6 +28,7 @@ class BookController extends Controller
            'message'=>'Book successfully found',
        ]);
     }
+
     public function getAllBooks()
     {
         $books = $this->book->with('genre:id,name')
