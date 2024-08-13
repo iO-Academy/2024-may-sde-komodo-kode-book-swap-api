@@ -87,6 +87,54 @@ class BookTest extends TestCase
         $response->assertInvalid(['claimed']);
     }
 
+    public function test_getBooksByClaimed_success(): void
+    {
+        Book::factory()->count(3)->create();
+        Book::factory()->count(7)->create(['claimed_by_name' => 'george', 'email' => "george@hotmail.com"]);
+
+        $data = 1;
+
+        $response = $this->get("/api/books?claimed={$data}");
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 7, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                    });
+            })
+        ;
+
+        $data = 0;
+
+        $response = $this->get("/api/books?claimed={$data}");
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 3, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                    });
+            })
+        ;
+    }
+
     public function test_claimBook_success(): void
     {
         $data = [
