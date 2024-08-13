@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-Route::get('/books/{id}', [\App\Http\Controllers\BookController::class, 'getSingleBook']);
 
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
 
+Route::get('/books/{id}', [\App\Http\Controllers\BookController::class, 'getSingleBook']);
+
 Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
 
-Route::get('/books/{genre}', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
 
 

@@ -18,7 +18,7 @@ class BookController extends Controller
     public function getSingleBook(int $id)
     {
        $book=$this->book->with('genre')->with('reviews')->find($id);
-       if (!$book){
+       if (!$book) {
            return response()->json([
                'message'=>"Book with id {$id} not found"
            ], 404);
@@ -29,25 +29,21 @@ class BookController extends Controller
        ]);
     }
 
-    public function getAllBooks($genre)
+    public function getAllBooks(Request $request)
     {
-        $books = $this->book->with('genre:id,name')
-            ->get()
-            ->makeHidden(['created_at', 'updated_at', 'blurb', 'claimed_by_name', 'page_count', 'year', 'genre_id', 'reviews_id']);
+        $books = $this->book->with('genre:id,name');
 
-        if ($genre) {
-
-            $books = Book::where('genre_id', '==', $genre);
-            return response()->json([
-                'data'=>$books,
-                'message' => 'Books successfully retrieved',
-            ], 200);
+        if ($request->genre) {
+            $books->where('genre_id', '=', $request->genre);
         }
+
+        $books = $books
+            ->get()
+            ->makeHidden(['created_at', 'updated_at']);
 
         return response()->json([
             'data' => $books,
             'message' => 'Books successfully retrieved',
         ]);
-
     }
 }
