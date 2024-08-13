@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use GrahamCampbell\ResultType\Success;
-use http\Env\Response;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -13,7 +12,7 @@ class BookController extends Controller
 
     public function __construct(Book $book)
     {
-        $this->book=$book;
+        $this->book = $book;
     }
 
     public function getSingleBook(int $id)
@@ -57,14 +56,14 @@ class BookController extends Controller
             ], 404);
         }
 
-        if($book->claimed_by_name!=null){
+        if($book->claimed_by_name != null){
             return response()->json([
                 'message' => "Book {$id} is claimed"
             ], 400);
         }
 
-        $book->claimed_by_name=$request->claimed_by_name;
-        $book->email=$request->email;
+        $book->claimed_by_name = $request->claimed_by_name;
+        $book->email = $request->email;
 
         if($book->save()){
             return response()->json([
