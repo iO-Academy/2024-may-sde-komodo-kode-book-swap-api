@@ -25,6 +25,7 @@ class BookSeeder extends Seeder
                 'page_count'=>rand(100,500),
                 'genre_id'=>rand(1,10),
                 'reviews_id'=>$faker->unique()->numberBetween(1,10),
+                'year'=>$faker->year(),
             ]);
         }
     }
