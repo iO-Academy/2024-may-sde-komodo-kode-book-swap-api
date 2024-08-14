@@ -10,7 +10,9 @@ Route::get('/user', function (Request $request) {
 Route::get('/books/{id}', [\App\Http\Controllers\BookController::class, 'getSingleBook']);
 Route::put('/books/{id}', [\App\Http\Controllers\BookController::class, 'claimBook']);
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
+Route::post('/books', [\App\Http\Controllers\BookController::class, 'addBook']);
 Route::put('/books/return/{id}', [\App\Http\Controllers\BookController::class, 'unclaimBook']);
+
 
 Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
 
