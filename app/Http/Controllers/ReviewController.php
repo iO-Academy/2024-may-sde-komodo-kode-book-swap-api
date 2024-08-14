@@ -25,10 +25,10 @@ class ReviewController extends Controller
         if($review->save()) {
             return response()->json([
                 'message' => 'Review Created'
-            ],201);
+            ], 201);
         }
         return response()->json([
             'message' => 'Unexpected error occurred'
-        ],500);
+        ], 500);
     }
 }
