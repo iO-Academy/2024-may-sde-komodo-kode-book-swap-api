@@ -97,18 +97,17 @@ class BookController extends Controller
         ]);
         $book = Book::find($id);
 
-        if(!$book){
+        if(!$book) {
             return response()->json([
                 'message' => "Book {$id} was not found"
             ], 404);
         }
-        if($book->claimed_by_name === null){
+        if($book->claimed_by_name === null) {
             return response()->json([
                 'message' => "Book {$id} is not currently claimed"
             ], 400);
         }
-        if($book->email != $request->email)
-        {
+        if($book->email != $request->email) {
             return response()->json([
                 'message' => "Book {$id} was not returned. {$request->email} did not claim this book."
             ], 400);
