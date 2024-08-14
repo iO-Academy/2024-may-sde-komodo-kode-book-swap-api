@@ -18,7 +18,7 @@ class BookTest extends TestCase
     public function test_getSingleBook_success(): void
     {
         Book::factory()->count(10)->create();
-        $response = $this->get('/api/books/1');
+        $response = $this->getJson('/api/books/1');
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
@@ -50,7 +50,7 @@ class BookTest extends TestCase
 
     public function test_getSingleBook_fail(): void
     {
-        $response = $this->get("/api/books/3421789321709831");
+        $response = $this->getJson("/api/books/3421789321709831");
 
         $response->assertStatus(404)
             ->assertJson(function (AssertableJson $json) {
@@ -62,7 +62,7 @@ class BookTest extends TestCase
     {
         Book::factory()->count(10)->create();
 
-        $response = $this->get('/api/books');
+        $response = $this->getJson('/api/books');
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
@@ -85,7 +85,7 @@ class BookTest extends TestCase
     {
         Book::factory()->count(1)->create();
 
-        $response = $this->get('/api/books?genre=1');
+        $response = $this->getJson('/api/books?genre=1');
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
@@ -108,16 +108,63 @@ class BookTest extends TestCase
     {
         Book::factory()->count(10)->create();
 
-        $response = $this->get('/api/books?genre=77');
+        $response = $this->getJson('/api/books?genre=77');
 
-        $response->assertStatus(302)
+        $response->assertStatus(422)
             ->assertInvalid(['genre']);
+    }
+
+    public function test_getAllBooks_search(): void
+    {
+        Book::factory()->create(['title' => 'test', 'author' => 'test', 'blurb' => 'test']);
+        Book::factory()->create(['title' => 'enim']);
+
+        $response = $this->getJson('/api/books?search=enim');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 1, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                    });
+            });
+    }
+
+    public function test_getAllBooks_searchEmpty(): void
+    {
+        Book::factory()->count(4)->create();
+
+        $response = $this->getJson('/api/books?search=enimuhiodghoifgndfiongmtestgf');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 0);
+            });
+    }
+
+    public function test_getAllBooks_search_failed(): void
+    {
+        Book::factory()->count(10)->create();
+        $data = null;
+        $response = $this->getJson("/api/books?search={$data}");
+
+        $response->assertStatus(422)
+            ->assertInvalid(['search']);
     }
 
     public function test_getBooksByClaimed_validation():void
     {
         $data = "Will man";
-        $response = $this->get("/api/books?claimed={$data}");
+        $response = $this->getJson("/api/books?claimed={$data}");
         $response->assertInvalid(['claimed']);
     }
 
@@ -128,7 +175,7 @@ class BookTest extends TestCase
 
         $data = 1;
 
-        $response = $this->get("/api/books?claimed={$data}");
+        $response = $this->getJson("/api/books?claimed={$data}");
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
@@ -155,7 +202,7 @@ class BookTest extends TestCase
 
         $data = 0;
 
-        $response = $this->get("/api/books?claimed={$data}");
+        $response = $this->getJson("/api/books?claimed={$data}");
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {

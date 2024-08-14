@@ -34,13 +34,18 @@ class BookController extends Controller
     {
         $request->validate([
             'claimed' => 'boolean',
-            'genre' => 'int|exists:genres,id'
+            'genre' => 'int|exists:genres,id',
+            'search' => 'string'
         ]);
 
         $books = $this->book->with('genre:id,name');
 
         if ($request->genre) {
             $books->where('genre_id', '=', $request->genre);
+        }
+
+        if ($request->search) {
+            $books->whereAny(['title', 'author', 'blurb'], 'LIKE', "%{$request->search}%");
         }
 
         if($request->claimed == 1){
