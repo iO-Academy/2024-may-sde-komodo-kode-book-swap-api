@@ -116,7 +116,8 @@ class BookTest extends TestCase
 
     public function test_getAllBooks_search(): void
     {
-        Book::factory()->count(1)->create(['title' => 'enim ']);
+        Book::factory()->create(['title' => 'test', 'author' => 'test', 'blurb' => 'test']);
+        Book::factory()->create(['title' => 'enim']);
 
         $response = $this->get('/api/books?search=enim');
 
@@ -134,6 +135,19 @@ class BookTest extends TestCase
                             $json->hasAll(['id', 'name']);
                         });
                     });
+            });
+    }
+
+    public function test_getAllBooks_searchEmpty(): void
+    {
+        Book::factory()->count(4)->create();
+
+        $response = $this->get('/api/books?search=enimuhiodghoifgndfiongmtestgf');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 0);
             });
     }
 
