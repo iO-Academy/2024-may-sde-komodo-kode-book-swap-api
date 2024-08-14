@@ -131,8 +131,8 @@ class BookController extends Controller
     public function addBook(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|exists:books,title',
-            'author' => 'required|string|exists:books,author',
+            'title' => 'required|string|min:1|max:20',
+            'author' => 'required|string|min:1|max:20',
             'genre_id' => 'required|int|exists:genres,id',
             'blurb' => 'string|max:50',
             'image' => 'string|max:250',

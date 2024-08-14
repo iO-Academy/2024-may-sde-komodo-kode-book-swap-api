@@ -272,10 +272,11 @@ class BookTest extends TestCase
        
     public function test_addBookSuccess():void
     {
+        Genre::factory()->create();
         $testData = [
             'title'=>'z',
             'author'=>'znarf',
-            'genre_id'=>5,
+            'genre_id'=>1,
             'blurb'=>'good book',
             'image'=>'url',
             'year'=>2023,
@@ -302,10 +303,11 @@ class BookTest extends TestCase
 
     public function test_addBookOptional():void
     {
+        Genre::factory()->create();
         $testData = [
             'title'=>'hello',
             'author'=>'author',
-            'genre_id'=>5,
+            'genre_id'=>1,
         ];
         $response = $this->postJson('/api/books', $testData);
         $response->assertStatus(201);
