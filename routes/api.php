@@ -8,7 +8,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/books/{id}', [\App\Http\Controllers\BookController::class, 'getSingleBook']);
-Route::put('/books/{id}',[\App\Http\Controllers\BookController::class, 'claimBook']);
+Route::put('/books/{id}', [\App\Http\Controllers\BookController::class, 'claimBook']);
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'getAllBooks']);
+Route::put('/books/return/{id}', [\App\Http\Controllers\BookController::class, 'unclaimBook']);
 
 Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
+
