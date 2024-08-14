@@ -302,4 +302,48 @@ class BookTest extends TestCase
 
         $response->assertInvalid(['email'])->assertStatus(422);
     }
+       
+    public function test_addBookSuccess():void
+    {
+        Genre::factory()->create();
+        $testData = [
+            'title'=>'z',
+            'author'=>'znarf',
+            'genre_id'=>1,
+            'blurb'=>'good book',
+            'image'=>'url',
+            'year'=>2023,
+            ];
+        $response = $this->postJson('/api/books', $testData);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('books', $testData);
+    }
+
+    public function test_addBookFail():void
+    {
+        $testData = [
+            'title'=>'',
+            'author'=>67,
+            'genre_id'=>5,
+            'blurb'=>'good book',
+            'image'=>'url',
+            'year'=>2023,
+        ];
+        $response = $this->postJson('/api/books', $testData);
+        $response->assertStatus(422)
+            ->assertInvalid(['title']);
+    }
+
+    public function test_addBookOptional():void
+    {
+        Genre::factory()->create();
+        $testData = [
+            'title'=>'hello',
+            'author'=>'author',
+            'genre_id'=>1,
+        ];
+        $response = $this->postJson('/api/books', $testData);
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('books', $testData);
+    }
 }

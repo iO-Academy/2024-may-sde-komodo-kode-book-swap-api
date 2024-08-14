@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use GrahamCampbell\ResultType\Success;
+use http\Env\Response;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -129,6 +130,37 @@ class BookController extends Controller
 
         return response()->json([
             'message' => 'Book {$id} was not able to be returned'
+        ], 500);
+    }
+ 
+    public function addBook(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|min:1|max:20',
+            'author' => 'required|string|min:1|max:20',
+            'genre_id' => 'required|int|exists:genres,id',
+            'blurb' => 'string|max:50',
+            'image' => 'string|max:250',
+            'year' => 'int|digits:4'
+        ]);
+
+        $book = new Book();
+
+        $book->title = $request->title;
+        $book->author = $request->author;
+        $book->genre_id = $request->genre_id;
+        $book->blurb = $request->blurb;
+        $book->image = $request->image;
+        $book->year = $request->year;
+
+        if ($book->save()) {
+            return response()->json([
+               'message' => 'Book created',
+            ], 201);
+        }
+
+        return response()->json([
+            'message' => 'Unexpected error occurred',
         ], 500);
     }
 }
