@@ -100,7 +100,6 @@ class BookController extends Controller
             'blurb' => 'string|max:50',
             'image' => 'string|max:250',
             'year' => 'int|digits:4'
-
         ]);
 
         $book = new Book();
