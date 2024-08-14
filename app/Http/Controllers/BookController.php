@@ -139,6 +139,7 @@ class BookController extends Controller
             'title' => 'required|string|min:1|max:20',
             'author' => 'required|string|min:1|max:20',
             'genre_id' => 'required|int|exists:genres,id',
+            'page_count' => 'int',
             'blurb' => 'string|max:50',
             'image' => 'string|max:250',
             'year' => 'int|digits:4'
@@ -152,6 +153,7 @@ class BookController extends Controller
         $book->blurb = $request->blurb;
         $book->image = $request->image;
         $book->year = $request->year;
+        $book->page_count = $request->page_count;
 
         if ($book->save()) {
             return response()->json([
