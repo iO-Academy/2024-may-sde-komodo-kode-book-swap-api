@@ -114,6 +114,39 @@ class BookTest extends TestCase
             ->assertInvalid(['genre']);
     }
 
+    public function test_getAllBooks_search(): void
+    {
+        Book::factory()->count(1)->create(['title' => 'enim ']);
+
+        $response = $this->get('/api/books?search=enim');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['data', 'message'])
+                    ->has('data', 1, function (AssertableJson $json) {
+                        $json->hasAll([
+                            'id',
+                            'title',
+                            'author',
+                            'image',
+                            'genre'
+                        ])->has('genre', function (AssertableJson $json) {
+                            $json->hasAll(['id', 'name']);
+                        });
+                    });
+            });
+    }
+
+    public function test_getAllBooks_search_failed(): void
+    {
+        Book::factory()->count(10)->create();
+        $data = null;
+        $response = $this->get("/api/books?search={$data}");
+
+        $response->assertStatus(302)
+            ->assertInvalid(['search']);
+    }
+
     public function test_getBooksByClaimed_validation():void
     {
         $data = "Will man";
