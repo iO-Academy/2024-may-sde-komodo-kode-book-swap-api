@@ -20,7 +20,7 @@ class GenreTest extends TestCase
     {
         Genre::factory()->count(10)->create();
 
-        $response = $this->get('/api/genres');
+        $response = $this->getJson('/api/genres');
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
