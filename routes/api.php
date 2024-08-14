@@ -10,7 +10,7 @@ Route::get('/user', function (Request $request) {
 
 Route::controller(BookController::class)->group(function () {
     Route::get('/books/{id}', 'getSingleBook');
-    Route::put('/books/{id}', 'claimBook');
+    Route::put('/books/claim/{id}', 'claimBook');
     Route::get('/books', 'getAllBooks');
     Route::post('/books', 'addBook');
     Route::put('/books/return/{id}', 'unclaimBook');
