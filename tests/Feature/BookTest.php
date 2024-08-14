@@ -217,6 +217,59 @@ class BookTest extends TestCase
         $response->assertInvalid(['claimed_by_name', 'email'])->assertStatus(422);
     }
 
+    public function test_unclaimBook_success()
+    {
+        $data = [
+            "email" => "milan@hotmail.com"
+        ];
+
+        Book::factory()->create(['claimed_by_name' => 'milan', 'email' => "milan@hotmail.com" ]);
+
+        $response = $this->putJson('/api/books/return/1', $data);
+
+        $response->assertStatus(200);
+
+        $emptyData = ['claimed_by_name' => null, 'email' => null];
+        $this->assertDatabaseHas('books', $emptyData);
+    }
+
+    public function test_unclaimBook_bookAlreadyUnclaimed()
+    {
+        $data = [
+            "email" => "milan@hotmail.com"
+        ];
+
+        Book::factory()->create(['claimed_by_name' => null, 'email' => null]);
+
+        $response = $this->putJson('/api/books/return/1', $data);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_unclaimBook_wrongEmail()
+    {
+        $data = [
+            "email" => "will@gmail.com"
+        ];
+
+        Book::factory()->create(['claimed_by_name' => 'milan', 'email' => "milan@hotmail.com" ]);
+
+        $response = $this->putJson('/api/books/return/1', $data);
+
+        $response->assertStatus(400);
+    }
+
+    public function test_unclaimBook_validation(): void
+    {
+        $data = [
+            "email" => "spaghetti"
+        ];
+
+        $response = $this->putJson('/api/books/return/1', $data);
+
+        $response->assertInvalid(['email'])->assertStatus(422);
+
+       
     public function test_addBookSuccess():void
     {
         Book::factory()->create();
