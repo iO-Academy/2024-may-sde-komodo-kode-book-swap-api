@@ -16,3 +16,4 @@ Route::put('/books/return/{id}', [\App\Http\Controllers\BookController::class, '
 
 Route::get('/genres', [\App\Http\Controllers\GenreController::class, 'getAllGenres']);
 
+Route::post('/reviews', [\App\Http\Controllers\ReviewController::class, 'createReview']);
