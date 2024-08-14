@@ -131,9 +131,9 @@ class BookController extends Controller
     public function addBook(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|min:1|max:20',
-            'author' => 'required|string|min:1|max:20',
-            'genre_id' => 'required|int|min:1|max:10',
+            'title' => 'required|string|exists:books,title',
+            'author' => 'required|string|exists:books,author',
+            'genre_id' => 'required|int|exists:genres,id',
             'blurb' => 'string|max:50',
             'image' => 'string|max:250',
             'year' => 'int|digits:4'
@@ -144,18 +144,18 @@ class BookController extends Controller
         $book->title = $request->title;
         $book->author = $request->author;
         $book->genre_id = $request->genre_id;
-        $book->blurb = $request->blurb ?? $request->blurb;
-        $book->image = $request->image ?? $request->image;
-        $book->year = $request->year ?? $request->year;
+        $book->blurb = $request->blurb;
+        $book->image = $request->image;
+        $book->year = $request->year;
 
         if ($book->save()) {
             return response()->json([
                'message' => 'Book created',
             ], 201);
         }
-        if (!$book) {
-            return response()->json([
-                'message' => 'Unexpected error occurred',
-            ], 500);
-        }
+
+        return response()->json([
+            'message' => 'Unexpected error occurred',
+        ], 500);
+    }
 }
