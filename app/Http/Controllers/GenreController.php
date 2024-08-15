@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Genre;
+use App\Services\InternalServerError;
 
 class GenreController extends Controller
 {
@@ -11,9 +12,7 @@ class GenreController extends Controller
         $genres = Genre::all();
 
         if (! $genres) {
-            return response()->json([
-                'message' => 'Unexpected error occurred',
-            ], 500);
+            return InternalServerError::generate(__METHOD__);
         }
 
         return response()->json([

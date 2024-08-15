@@ -18,7 +18,6 @@ class Logs
     {
         Log::info("Method: {$request->method()}, Path: {$request->path()}, Data: {$request->collect()}, Query: {$request->fullUrl()}, Safe? {$request->isMethodSafe()}");
 
-
         return $next($request);
     }
 }
