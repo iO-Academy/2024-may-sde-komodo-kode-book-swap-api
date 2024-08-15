@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Services\InternalServerError;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -14,7 +16,7 @@ class BookController extends Controller
         $this->book = $book;
     }
 
-    public function getSingleBook(int $id)
+    public function getSingleBook(int $id): JsonResponse
     {
         $book = $this->book->with('genre')->with('reviews')->find($id);
         if (!$book) {
@@ -29,7 +31,7 @@ class BookController extends Controller
         ]);
     }
 
-    public function getAllBooks(Request $request)
+    public function getAllBooks(Request $request): JsonResponse
     {
         $request->validate([
             'claimed' => 'boolean',
@@ -61,7 +63,7 @@ class BookController extends Controller
         ]);
     }
 
-    public function claimBook(int $id, Request $request)
+    public function claimBook(int $id, Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'string|required',
@@ -91,12 +93,10 @@ class BookController extends Controller
             ]);
         }
 
-        return response()->json([
-            'message' => 'Something went wrong',
-        ], 500);
+        return InternalServerError::generate(__METHOD__);
     }
 
-    public function unclaimBook(int $id, Request $request)
+    public function unclaimBook(int $id, Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'string|email|required',
@@ -130,12 +130,10 @@ class BookController extends Controller
             ]);
         }
 
-        return response()->json([
-            'message' => 'Book {$id} was not able to be returned',
-        ], 500);
+        return InternalServerError::generate(__METHOD__);
     }
 
-    public function addBook(Request $request)
+    public function addBook(Request $request): JsonResponse
     {
         $request->validate([
             'title' => 'required|string|min:1|max:20',
@@ -163,8 +161,6 @@ class BookController extends Controller
             ], 201);
         }
 
-        return response()->json([
-            'message' => 'Unexpected error occurred',
-        ], 500);
+        return InternalServerError::generate(__METHOD__);
     }
 }

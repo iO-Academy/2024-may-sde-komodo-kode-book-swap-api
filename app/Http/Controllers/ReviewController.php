@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Review;
+use App\Services\InternalServerError;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -28,8 +29,6 @@ class ReviewController extends Controller
             ], 201);
         }
 
-        return response()->json([
-            'message' => 'Unexpected error occurred',
-        ], 500);
+        return InternalServerError::generate(__METHOD__);
     }
 }
