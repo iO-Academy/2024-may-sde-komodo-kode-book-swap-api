@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Genre extends Model
 {
-    public $hidden=['created_at', 'updated_at'];
+    public $hidden = ['created_at', 'updated_at'];
+
     use HasFactory;
+
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
