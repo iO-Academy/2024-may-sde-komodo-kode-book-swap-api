@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Genre;
 use App\Services\InternalServerError;
+use App\Services\ServerResponse;
 
 class GenreController extends Controller
 {
@@ -15,9 +16,6 @@ class GenreController extends Controller
             return InternalServerError::generate(__METHOD__);
         }
 
-        return response()->json([
-            'data' => $genres,
-            'message' => 'Genres retrieved',
-        ], 200);
+        return ServerResponse::generateResponse('Genres retrieved', 200, $genres);
     }
 }

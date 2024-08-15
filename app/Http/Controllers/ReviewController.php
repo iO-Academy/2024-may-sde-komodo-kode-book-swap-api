@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use App\Services\InternalServerError;
+use App\Services\ServerResponse;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -23,10 +24,10 @@ class ReviewController extends Controller
         $review->review = $request->review;
         $review->book_id = $request->book_id;
 
+
+
         if ($review->save()) {
-            return response()->json([
-                'message' => 'Review Created',
-            ], 201);
+            return ServerResponse::generateResponse('Review Created', 201);
         }
 
         return InternalServerError::generate(__METHOD__);

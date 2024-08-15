@@ -5,6 +5,7 @@ namespace Tests\Feature;
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Review;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -39,7 +40,7 @@ class BookTest extends TestCase
                             ->has('genre', function (AssertableJson $json) {
                                 $json->hasAll(['id', 'name']);
                             })
-                            ->has('reviews', 1, function (AssertableJson $json) {
+                            ->has('reviews',1, function (AssertableJson $json) {
                                 $json->hasAll(['id', 'name', 'review', 'rating']);
                             });
 
@@ -218,36 +219,35 @@ class BookTest extends TestCase
                             $json->hasAll(['id', 'name']);
                         });
                     });
-            })
-        ;
+            });
     }
 
     public function test_claimBook_success(): void
     {
         $data = [
-            "claimed_by_name" => "milan",
+            "name" => "milan",
             "email" => "milan@hotmail.com"
         ];
 
         Book::factory()->create();
 
-        $response = $this->putJson('/api/books/1', $data);
+        $response = $this->putJson('/api/books/claim/1', $data);
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('books', $data);
+        $this->assertDatabaseHas('books', ["claimed_by_name" => "milan", "email" => "milan@hotmail.com"]);
     }
 
     public function test_claimBook_alreadyClaimed(): void
     {
         $data = [
-            "claimed_by_name" => "milan",
+            "name" => "milan",
             "email" => "milan@hotmail.com"
         ];
 
         Book::factory()->create(['claimed_by_name' => 'george', 'email' => "george@hotmail.com"]);
 
-        $response = $this->putJson('/api/books/1', $data);
+        $response = $this->putJson('/api/books/claim/1', $data);
 
         $response->assertStatus(400);
     }
@@ -255,13 +255,13 @@ class BookTest extends TestCase
     public function test_claimBook_validation(): void
     {
         $data = [
-            "claimed_by_name" => null,
+            "name" => null,
             "email" => "milom"
         ];
 
-        $response = $this->putJson('/api/books/1', $data);
+        $response = $this->putJson('/api/books/claim/1', $data);
 
-        $response->assertInvalid(['claimed_by_name', 'email'])->assertStatus(422);
+        $response->assertInvalid(['name', 'email'])->assertStatus(422);
     }
 
     public function test_unclaimBook_success()
