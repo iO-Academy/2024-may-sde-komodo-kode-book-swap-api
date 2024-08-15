@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('page_count')->nullable();
             $table->integer('year')->nullable();
+            $table->integer('claim_count')->default(0);
             $table->foreignId('genre_id');
             $table->foreignId('reviews_id')->nullable();
             $table->timestamps();

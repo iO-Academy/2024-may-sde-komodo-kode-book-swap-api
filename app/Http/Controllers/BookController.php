@@ -78,7 +78,7 @@ class BookController extends Controller
 
         $book->claimed_by_name = $request->name;
         $book->email = $request->email;
-
+        $book->claim_count = $book->claim_count+1;
         if ($book->save()) {
             return ServerResponse::generateResponse("Book {$id} was claimed");
         }
@@ -142,5 +142,10 @@ class BookController extends Controller
         }
 
         return InternalServerError::generate(__METHOD__);
+    }
+
+    public function statReport()
+    {
+        return view('ReportStats');
     }
 }
