@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Services\InternalServerError;
+use App\Services\ServerResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,15 +21,10 @@ class BookController extends Controller
     {
         $book = $this->book->with('genre')->with('reviews')->find($id);
         if (!$book) {
-            return response()->json([
-                'message' => "Book with id {$id} not found",
-            ], 404);
+            return ServerResponse::generateResponse("Book with id {$id} not found", 404);
         }
 
-        return response()->json([
-            'data' => $book,
-            'message' => 'Book successfully found',
-        ]);
+        return ServerResponse::generateResponse('Book successfully found', 200, $book);
     }
 
     public function getAllBooks(Request $request): JsonResponse
@@ -50,17 +46,17 @@ class BookController extends Controller
         }
 
         if ($request->claimed == 1) {
-            $books = $books->where('claimed_by_name', '!=', null);
-        } else {
-            $books = $books->where('claimed_by_name', '=', null);
+            $books = $books->where('claimed_by_name', '!=', null)
+                ->get()
+                ->makeHidden(['blurb', 'claimed_by_name', 'page_count', 'year']);
+            return ServerResponse::generateResponse('Books successfully retrieved', 200, $books);
         }
 
-        $books = $books->get()->makeHidden(['blurb', 'claimed_by_name', 'page_count', 'year']);
+        $books = $books->where('claimed_by_name', '=', null)
+            ->get()
+            ->makeHidden(['blurb', 'claimed_by_name', 'page_count', 'year']);;
 
-        return response()->json([
-            'data' => $books,
-            'message' => 'Books successfully retrieved',
-        ]);
+        return ServerResponse::generateResponse('Books successfully retrieved', 200, $books);
     }
 
     public function claimBook(int $id, Request $request): JsonResponse
@@ -73,24 +69,18 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if (! $book) {
-            return response()->json([
-                'message' => "Book {$id} was not found",
-            ], 404);
+            return ServerResponse::generateResponse("Book {$id} was not found", 404);
         }
 
         if ($book->claimed_by_name != null) {
-            return response()->json([
-                'message' => "Book {$id} is claimed",
-            ], 400);
+            return ServerResponse::generateResponse("Book {$id} is claimed", 400);
         }
 
         $book->claimed_by_name = $request->name;
         $book->email = $request->email;
 
         if ($book->save()) {
-            return response()->json([
-                'message' => "Book {$id} was claimed",
-            ]);
+            return ServerResponse::generateResponse("Book {$id} was claimed");
         }
 
         return InternalServerError::generate(__METHOD__);
@@ -104,30 +94,22 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if (!$book) {
-            return response()->json([
-                'message' => "Book {$id} was not found",
-            ], 404);
+            return ServerResponse::generateResponse("Book {$id} was not found", 404);
         }
 
         if ($book->claimed_by_name === null) {
-            return response()->json([
-                'message' => "Book {$id} is not currently claimed",
-            ], 400);
+            return ServerResponse::generateResponse("Book {$id} is not currently claimed", 400);
         }
 
         if ($book->email != $request->email) {
-            return response()->json([
-                'message' => "Book {$id} was not returned. {$request->email} did not claim this book.",
-            ], 400);
+            return ServerResponse::generateResponse("Book {$id} was not returned. {$request->email} did not claim this book.", 400);
         }
 
         $book->claimed_by_name = null;
         $book->email = null;
 
         if ($book->save()) {
-            return response()->json([
-                'message' => "Book {$id} was returned",
-            ]);
+            return ServerResponse::generateResponse("Book {$id} was returned");
         }
 
         return InternalServerError::generate(__METHOD__);
@@ -156,9 +138,7 @@ class BookController extends Controller
         $book->page_count = $request->page_count;
 
         if ($book->save()) {
-            return response()->json([
-                'message' => 'Book created',
-            ], 201);
+            return ServerResponse::generateResponse('Book created', 201);
         }
 
         return InternalServerError::generate(__METHOD__);
