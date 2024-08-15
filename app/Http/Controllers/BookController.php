@@ -79,6 +79,7 @@ class BookController extends Controller
         $book->claimed_by_name = $request->name;
         $book->email = $request->email;
         $book->claim_count = $book->claim_count+1;
+
         if ($book->save()) {
             return ServerResponse::generateResponse("Book {$id} was claimed");
         }
@@ -146,6 +147,11 @@ class BookController extends Controller
 
     public function statReport()
     {
-        return view('ReportStats');
+        $booksPopular = $this->book->all()->sortByDesc('claim_count')->take(3);
+        $booksLeastPopular = $this->book->all()->sortBy('claim_count')->take(3);
+
+        $genre = $this->book->query()->with('genres')->groupBy('genre_id');
+
+        return view('ReportStats', ['booksPopular' => $booksPopular, 'booksLeastPopular' => $booksLeastPopular, 'genre' => $genre]);
     }
 }
