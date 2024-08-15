@@ -21,8 +21,8 @@ class BookFactory extends Factory
         return [
             'title' => $this->faker->words(rand(1,5),true),
             'author' => $this->faker->word(),
-            'blurb' => $this->faker->paragraph(3),
-            'image' => $this->faker->imageUrl(),
+            'blurb' => $this->faker->paragraph(2),
+            'image' => $this->faker->imageUrl(600,840),
             'page_count' => rand(100,500),
             'genre_id' => Genre::factory(),
             'reviews_id' => Review::factory(),

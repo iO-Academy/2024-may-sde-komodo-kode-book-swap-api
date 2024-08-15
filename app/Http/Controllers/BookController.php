@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use GrahamCampbell\ResultType\Success;
-use http\Env\Response;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -18,16 +16,17 @@ class BookController extends Controller
 
     public function getSingleBook(int $id)
     {
-       $book=$this->book->with('genre')->with('reviews')->find($id);
-       if (!$book) {
-           return response()->json([
-               'message' => "Book with id {$id} not found"
-           ], 404);
-       }
-       return response()->json([
-           'data' => $book,
-           'message' => 'Book successfully found',
-       ]);
+        $book = $this->book->with('genre')->with('reviews')->find($id);
+        if (!$book) {
+            return response()->json([
+                'message' => "Book with id {$id} not found",
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $book,
+            'message' => 'Book successfully found',
+        ]);
     }
 
     public function getAllBooks(Request $request)
@@ -35,7 +34,7 @@ class BookController extends Controller
         $request->validate([
             'claimed' => 'boolean',
             'genre' => 'int|exists:genres,id',
-            'search' => 'string'
+            'search' => 'string',
         ]);
 
         $books = $this->book->with('genre:id,name');
@@ -48,13 +47,14 @@ class BookController extends Controller
             $books->whereAny(['title', 'author', 'blurb'], 'LIKE', "%{$request->search}%");
         }
 
-        if($request->claimed == 1){
-            $books = $books->where('claimed_by_name','!=',null);
-        } else{
-            $books = $books->where('claimed_by_name','=',null);
+        if ($request->claimed == 1) {
+            $books = $books->where('claimed_by_name', '!=', null);
+        } else {
+            $books = $books->where('claimed_by_name', '=', null);
         }
 
-        $books = $books->get()->makeHidden(['created_at', 'updated_at', 'blurb', 'claimed_by_name', 'page_count', 'year', 'genre_id', 'reviews_id']);
+        $books = $books->get()->makeHidden(['blurb', 'claimed_by_name', 'page_count', 'year']);
+
         return response()->json([
             'data' => $books,
             'message' => 'Books successfully retrieved',
@@ -65,74 +65,76 @@ class BookController extends Controller
     {
         $request->validate([
             'name' => 'string|required',
-            'email' => 'string|email|required'
+            'email' => 'string|email|required',
         ]);
 
         $book = Book::find($id);
 
-        if(!$book){
+        if (! $book) {
             return response()->json([
-                'message' => "Book {$id} was not found"
+                'message' => "Book {$id} was not found",
             ], 404);
         }
 
-        if($book->claimed_by_name != null){
+        if ($book->claimed_by_name != null) {
             return response()->json([
-                'message' => "Book {$id} is claimed"
+                'message' => "Book {$id} is claimed",
             ], 400);
         }
 
         $book->claimed_by_name = $request->name;
         $book->email = $request->email;
 
-        if($book->save()){
+        if ($book->save()) {
             return response()->json([
-                'message' => "Book {$id} was claimed"
+                'message' => "Book {$id} was claimed",
             ]);
         }
 
         return response()->json([
-            'message' => 'Something went wrong'
+            'message' => 'Something went wrong',
         ], 500);
     }
 
     public function unclaimBook(int $id, Request $request)
     {
         $request->validate([
-            'email' => 'string|email|required'
+            'email' => 'string|email|required',
         ]);
         $book = Book::find($id);
 
-        if(!$book) {
+        if (!$book) {
             return response()->json([
-                'message' => "Book {$id} was not found"
+                'message' => "Book {$id} was not found",
             ], 404);
         }
-        if($book->claimed_by_name === null) {
+
+        if ($book->claimed_by_name === null) {
             return response()->json([
-                'message' => "Book {$id} is not currently claimed"
+                'message' => "Book {$id} is not currently claimed",
             ], 400);
         }
-        if($book->email != $request->email) {
+
+        if ($book->email != $request->email) {
             return response()->json([
-                'message' => "Book {$id} was not returned. {$request->email} did not claim this book."
+                'message' => "Book {$id} was not returned. {$request->email} did not claim this book.",
             ], 400);
         }
 
         $book->claimed_by_name = null;
         $book->email = null;
 
-        if($book->save()){
+        if ($book->save()) {
             return response()->json([
-                'message' => "Book {$id} was returned"
+                'message' => "Book {$id} was returned",
             ]);
         }
 
         return response()->json([
-            'message' => 'Book {$id} was not able to be returned'
+            'message' => 'Book {$id} was not able to be returned',
         ], 500);
     }
- 
+
     public function addBook(Request $request)
     {
         $request->validate([
@@ -142,10 +144,10 @@ class BookController extends Controller
             'page_count' => 'int',
             'blurb' => 'string|max:50',
             'image' => 'string|max:250',
-            'year' => 'int|digits:4'
+            'year' => 'int|digits:4',
         ]);
 
-        $book = new Book();
+        $book = new Book;
 
         $book->title = $request->title;
         $book->author = $request->author;
@@ -157,7 +159,7 @@ class BookController extends Controller
 
         if ($book->save()) {
             return response()->json([
-               'message' => 'Book created',
+                'message' => 'Book created',
             ], 201);
         }
 
